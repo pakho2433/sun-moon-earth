@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#050816" />
+  <meta name="description" content="互動式太陽、地球、月球 3D 教學模型，附 AI 星空導師、語音講解與自適應小測。" />
+  <title>Sun · Moon · Earth 3D AI Lab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="scene" aria-label="太陽地球月球 3D 模型"></div>
+
+  <div class="topbar">
+    <div class="brand">
+      <h1>☀ Sun · Moon · Earth 3D AI Lab</h1>
+      <p>互動探索公轉、自轉、月相與日月食</p>
+    </div>
+    <div class="score-pill">AI 小測：<b id="score">0</b> 分 · 等級 <span id="level">1</span></div>
+  </div>
+
+  <section id="infoCard" class="panel info-card" aria-live="polite">
+    <div class="row" style="justify-content:space-between; align-items:flex-start">
+      <div>
+        <h2 id="infoTitle">地球</h2>
+        <p id="infoDesc"></p>
+      </div>
+      <button id="closeInfo" class="icon-btn" aria-label="關閉資料卡">×</button>
+    </div>
+    <div id="facts" class="facts"></div>
+  </section>
+
+  <section id="controlPanel" class="panel control-panel" aria-label="模型控制">
+    <div class="control-head">
+      <p class="section-title"><span class="control-title-icon">🔭</span> 快速觀察</p>
+      <button id="collapseControls" class="icon-btn collapse-btn" type="button" aria-expanded="true" aria-label="縮小模型控制面板">
+        <span id="collapseIcon">⌄</span><span class="collapse-label">縮小</span>
+      </button>
+    </div>
+    <div class="control-content">
+      <div class="row wrap" style="margin-top:10px">
+        <button class="btn focus-btn" data-focus="sun">☀ 太陽</button>
+        <button class="btn focus-btn" data-focus="earth">🌍 地球</button>
+        <button class="btn focus-btn" data-focus="moon">🌕 月球</button>
+        <button class="btn focus-btn" data-focus="system">◎ 全景</button>
+      </div>
+      <div class="divider"></div>
+      <p class="section-title">智能情境</p>
+      <div class="row wrap">
+        <button id="solarEclipse" class="btn primary">日食示範</button>
+        <button id="lunarEclipse" class="btn primary">月食示範</button>
+        <button id="topView" class="btn">軌道俯視</button>
+      </div>
+      <div class="divider"></div>
+      <div class="row">
+        <button id="playPause" class="btn primary">⏸ 暫停</button>
+        <button id="toggleLabels" class="btn active">標籤：開</button>
+        <button id="toggleOrbits" class="btn active">軌道：開</button>
+      </div>
+      <div class="slider-line">
+        <span>模擬速度</span>
+        <input id="speed" type="range" min="0" max="4" value="1" step="0.1" aria-label="模擬速度" />
+        <b id="speedValue">1.0×</b>
+      </div>
+    </div>
+  </section>
+
+  <aside id="aiPanel" class="panel ai-panel" aria-label="AI 星空導師">
+    <div class="ai-head">
+      <div class="ai-title">
+        <div>
+          <h2>✨ AI 星空導師</h2>
+          <small>可問太陽系、行星、恆星、黑洞等星體知識</small>
+        </div>
+        <div class="row">
+          <button id="voiceToggle" class="icon-btn active" title="語音講解" aria-label="切換語音講解">🔊</button>
+          <button id="closeAi" class="icon-btn" aria-label="關閉 AI 面板">×</button>
+        </div>
+      </div>
+      <div class="privacy">本地星體知識庫：只回答天文與星體相關問題，毋須 API Key。</div>
+    </div>
+    <div id="messages" class="messages"></div>
+    <div class="suggestions">
+      <button class="chip" data-prompt="太陽系有幾多粒行星？">太陽系有幾多行星？</button>
+      <button class="chip" data-prompt="點解星星會閃？">點解星星會閃？</button>
+      <button class="chip" data-prompt="黑洞係咩？">黑洞係咩？</button>
+      <button class="chip" data-prompt="出一題小測">出一題小測</button>
+    </div>
+    <form id="composer" class="composer">
+      <input id="question" autocomplete="off" maxlength="160" placeholder="問任何星體知識，例如：黑洞係咩？" aria-label="輸入星體問題" />
+      <button class="icon-btn" type="submit" aria-label="送出問題">➤</button>
+    </form>
+  </aside>
+
+  <button id="aiFab" class="ai-fab" aria-label="開啟 AI 星空導師">✨</button>
+  <div id="toast" class="toast" role="status"></div>
+  <div class="hint">拖曳旋轉 · 滾輪／雙指縮放 · 點擊星體查看資料</div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
